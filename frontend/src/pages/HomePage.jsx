@@ -6,10 +6,12 @@ import toast from 'react-hot-toast'
 import Navbar from '../components/Navbar'
 import RateLimitedUI from '../components/RateLimitedUI'
 import NoteCard from '../components/NoteCard'
+import NotesNotFound from '../components/NotesNotFound'
 const HomePage = () => {
   const [isRateLimited, setRateLimited] = useState(false);
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchNotes = async () => {
       try {
@@ -38,11 +40,12 @@ const HomePage = () => {
       {isRateLimited && <RateLimitedUI/>}
       <div className="p-4 mx-auto mt-6 max-w-7xl">
         {loading && <div className="py-10 text-center text-primary">Loading Notes...</div>}
+        {!isRateLimited && notes.length === 0 && <NotesNotFound/>}
         {notes.length !== 0 && !isRateLimited && (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {
               notes.map((note) =>(
-                <NoteCard key={note._id} note={note} />
+                <NoteCard key={note._id} note={note} setNotes={setNotes}/>
               ))
             }
           </div>
